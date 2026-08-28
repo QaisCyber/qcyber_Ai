@@ -3,24 +3,68 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>QCyber AI - Red Teaming Challenge</title>
+    <meta name="robots" content="index, follow">
+    <meta name="author" content="QCyber">
+    
+    <!-- SEO Primary Meta Tags -->
+    <title>QCyber AI - Red Teaming & LLM CTF Challenge</title>
+    <meta name="description" content="اختبر مهاراتك في اختراق واختبار أمان نماذج الذكاء الاصطناعي (LLM Red Teaming) عبر 21 مستواً مبتكراً وفق معايير OWASP LLM Top 10.">
+    <meta name="keywords" content="QCyber,المهندس قيس ابو شاهين , قيس ابو شاهين مدرب امن سيبراني , LLM CTF, Red Teaming, Prompt Injection, OWASP LLM, AI Security, Cybersecurity Syria, اختبار اختراق الذكاء الاصطناعي, هندسة التوجيه">
+
+    <!-- Open Graph / Facebook / LinkedIn / WhatsApp -->
+    <meta property="og:type" content="website">
+    <meta property="og:title" content="QCyber AI - Red Teaming & LLM Security Challenge">
+    <meta property="og:description" content="تحدي أمني تفاعلي لاختبار ثغرات النماذج اللغوية الكبيرة (Prompt Injection, Jailbreaking, XSS, SSRF).">
+
+    <!-- Twitter Card -->
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="QCyber AI - Red Teaming & LLM CTF Challenge">
+    <meta name="twitter:description" content="تحدي أمني تفاعلي لاختبار ثغرات النماذج اللغوية الكبيرة (Prompt Injection, Jailbreaking, XSS, SSRF).">
+
+    <!-- Favicon & App Icons -->
+
+
+    <!-- CSS & FontAwesome Preloading -->
     <link rel="stylesheet" href="css/style.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <!-- Deferred External Scripts for Faster Initial Loading -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js" defer></script>
 </head>
 <body>
     <div class="app-container">
+        <!-- Sidebar -->
         <aside class="sidebar">
             <div class="brand">
                 <i class="fa-solid fa-dragon brand-icon"></i>
                 <h2>QCYBER <span>AI</span></h2>
             </div>
+            
             <div class="level-status">
-                <span>التقدم: <b id="completed-count">0</b> / 15</span>
+                <span>التقدم: <b id="completed-count">0</b> / 21</span>
+                <button id="reset-btn" title="إعادة تشغيل التقدم"><i class="fa-solid fa-rotate-right"></i></button>
             </div>
+
+            <!-- Suspicion Meter (WAF Simulation) -->
+            <div class="waf-meter-container">
+                
+                <div class="waf-label"><span>مستوى الشبهة (WAF Risk):</span> <b id="waf-score">0%</b>                <i class="fa-solid fa-microchip"></i>
+</div>
+                <div class="waf-bar-bg"><div id="waf-bar-fill" class="waf-bar-fill"></div></div>
+            </div>
+
             <ul class="levels-list" id="levels-list">
-                </ul>
+                <!-- Rendered dynamically -->
+            </ul>
+
+            <div class="sidebar-footer">
+                <button id="cert-btn" class="btn-cert" disabled onclick="generateCertificate()">
+                    <i class="fa-solid fa-award"></i> تحميل الشهادة
+                </button>
+            </div>
         </aside>
 
+        <!-- Main Workspace -->
         <main class="chat-wrapper">
             <header class="chat-header">
                 <div class="level-info">
@@ -29,6 +73,10 @@
                         <h3 id="current-level-title">المستوى 1: Direct Prompt Injection</h3>
                         <p id="current-level-desc">حاول استخراج الكلمة السرية عبر إرباك النموذج بأوامر مباشرة.</p>
                     </div>
+                </div>
+                <div class="header-actions">
+                    <button id="owasp-info-btn" class="btn-info" onclick="showOwaspInfo()"><i class="fa-solid fa-book-bookmark"></i> شرح الثغرة</button>
+                    <button id="hint-btn" class="btn-hint" onclick="showHint()"><i class="fa-solid fa-lightbulb"></i> تلميح</button>
                 </div>
             </header>
 
@@ -42,11 +90,24 @@
             <div class="chat-input-area">
                 <form id="chat-form">
                     <input type="text" id="user-input" placeholder="اكتب أمر الهجوم الخاص بك هنا..." autocomplete="off" required>
-                    <button type="submit"><i class="fa-solid fa-paper-plane"></i> إرسال</button>
+                    <button type="submit" id="send-btn"><i class="fa-solid fa-user-secret"></i> احقن الارسال</button>
                 </form>
             </div>
         </main>
     </div>
+
+    <!-- Modal for OWASP Reference -->
+    <div id="owasp-modal" class="modal">
+        <div class="modal-content">
+            <span class="close-btn" onclick="closeOwaspInfo()">&times;</span>
+            <h2 id="modal-owasp-title">شرح الثغرة</h2>
+            <hr style="border-color: var(--border-color); margin: 10px 0;">
+            <p id="modal-owasp-body">تفاصيل الثغرة وطرق الحماية...</p>
+        </div>
+    </div>
+
+    <!-- Canvas for Confetti -->
+    <canvas id="confetti-canvas"></canvas>
 
     <script src="js/levels.js"></script>
     <script src="js/engine.js"></script>
