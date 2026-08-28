@@ -1,0 +1,9 @@
+# Robots.txt for QCyber AI - Red Teaming Challenge
+User-agent: *
+Allow: /
+
+# Disallow private assets or core logic files if needed
+Disallow: /js/levels.js
+
+# Sitemap location
+Sitemap: hhttps://qaiscyber.github.io/qcyber_Ai/sitemap.xml
