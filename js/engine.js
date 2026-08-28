@@ -1,34 +1,42 @@
-// engine.js - محرك التحقق وتقييم الثغرات
+// engine.js - محرك التحكم وتشفير البيانات المستمرة
 
-// دالة لتشفير النصوص بقيمة SHA-256 للتحقق من الـ Flag بدون كشفه في الكود
-async function hashFlag(text) {
-    const msgUint8 = new TextEncoder().encode(text.trim().toLowerCase());
-    const hashBuffer = await crypto.subtle.digest('SHA-256', msgUint8);
-    const hashArray = Array.from(new Uint8Array(hashBuffer));
-    return hashArray.map(b => b.toString(16).padStart(2, '0')).join('');
-}
-
-// كائن إدارة حالة اللعب والتقدم
 const GameState = {
-    completedLevels: JSON.parse(localStorage.getItem('qcyber_completed') || '[]'),
-    
-    isUnlocked(levelId) {
-        if (levelId === 1) return true;
-        return this.completedLevels.includes(levelId - 1);
+    // تشفير وسك البيانات في localstorage لمنع القراءة المباشرة
+    getCompletedLevels() {
+        try {
+            const raw = localStorage.getItem('qcyber_enc_prog');
+            if (!raw) return [];
+            return JSON.parse(atob(raw));
+        } catch(e) {
+            return [];
+        }
     },
 
-    async submitFlag(levelId, submittedFlag) {
+    isUnlocked(levelId) {
+        if (levelId === 1) return true;
+        const completed = this.getCompletedLevels();
+        return completed.includes(levelId - 1);
+    },
+
+    submitFlag(levelId, submittedFlag) {
         const level = levelsData.find(l => l.id === levelId);
         if (!level) return false;
 
-        const hashedInput = await hashFlag(submittedFlag);
-        if (hashedInput === level.flagHash) {
-            if (!this.completedLevels.includes(levelId)) {
-                this.completedLevels.push(levelId);
-                localStorage.setItem('qcyber_completed', JSON.stringify(this.completedLevels));
+        const cleanInput = submittedFlag.trim().toLowerCase();
+        const expectedFlag = level.rawFlag.trim().toLowerCase();
+
+        if (cleanInput === expectedFlag) {
+            let completed = this.getCompletedLevels();
+            if (!completed.includes(levelId)) {
+                completed.push(levelId);
+                localStorage.setItem('qcyber_enc_prog', btoa(JSON.stringify(completed)));
             }
             return true;
         }
         return false;
+    },
+
+    resetProgress() {
+        localStorage.removeItem('qcyber_enc_prog');
     }
 };
