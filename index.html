@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>QCyber AI - Red Teaming Challenge</title>
+    <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body>
+    <div class="app-container">
+        <aside class="sidebar">
+            <div class="brand">
+                <i class="fa-solid fa-dragon brand-icon"></i>
+                <h2>QCYBER <span>AI</span></h2>
+            </div>
+            <div class="level-status">
+                <span>التقدم: <b id="completed-count">0</b> / 15</span>
+            </div>
+            <ul class="levels-list" id="levels-list">
+                </ul>
+        </aside>
+
+        <main class="chat-wrapper">
+            <header class="chat-header">
+                <div class="level-info">
+                    <i class="fa-solid fa-shield-halved level-icon"></i>
+                    <div>
+                        <h3 id="current-level-title">المستوى 1: Direct Prompt Injection</h3>
+                        <p id="current-level-desc">حاول استخراج الكلمة السرية عبر إرباك النموذج بأوامر مباشرة.</p>
+                    </div>
+                </div>
+            </header>
+
+            <div class="chat-messages" id="chat-messages">
+                <div class="message system">
+                    <i class="fa-solid fa-dragon"></i>
+                    <div class="content">مرحباً بك في منصة QCyber AI. النظام محمي بأعتى طبقات الدفاع. حاول استخراج الـ Flag للوصول للمرحلة التالية.</div>
+                </div>
+            </div>
+
+            <div class="chat-input-area">
+                <form id="chat-form">
+                    <input type="text" id="user-input" placeholder="اكتب أمر الهجوم الخاص بك هنا..." autocomplete="off" required>
+                    <button type="submit"><i class="fa-solid fa-paper-plane"></i> إرسال</button>
+                </form>
+            </div>
+        </main>
+    </div>
+
+    <script src="js/levels.js"></script>
+    <script src="js/engine.js"></script>
+    <script src="js/app.js"></script>
+</body>
+</html>
